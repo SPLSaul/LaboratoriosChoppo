@@ -1,0 +1,15 @@
+{
+    "empresa": {
+        "RFC": "CHOPO123456",
+        "nombre": "Laboratorios Chopo",
+        "Direccion": "Avenida de los Insurgentes 1234",
+        "Regimen": "R�gimen General de Ley Personas Morales",
+        "Lugar de Expedicion": "Mexico City"
+    },
+    "cliente": {
+        "RFC": "SAER1234512HBC",
+        "nombre": "Zeng Dickson",
+        "CFDI": "ZED123456789",
+        "Domicilio": "Calle de la Paz 123"
+    }
+}
