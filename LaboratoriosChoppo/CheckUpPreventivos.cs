@@ -16,10 +16,11 @@ namespace LaboratoriosChoppo
 
     public partial class check_up_label : Form
     {
-        private readonly string connectionString = "Server=localhost;Database=Choppo;User Id=SPL;Password=Arr!ba3lCruzAzul;TrustServerCertificate=True;";
+        private readonly string connectionString = "Server=tcp:laboratorios-chopo.database.windows.net,1433;Initial Catalog=chopoLabs;Persist Security Info=False;User ID=chopo;Password=admin123!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
         public check_up_label()
         {
             InitializeComponent();
+
         }
         private void label3_Click(object sender, EventArgs e)
         {
@@ -29,73 +30,52 @@ namespace LaboratoriosChoppo
         private void label1_Click(object sender, EventArgs e)
         {
 
-        }
-        private async Task<Dictionary<int, decimal>> ObtenerPreciosAsync(SqlConnection connection)
-        {
-            var precios = new Dictionary<int, decimal>();
-            string query = "SELECT id_Estudio, precio FROM ESTUDIOS";
-
-            using (var command = new SqlCommand(query, connection))
-            using (var reader = await command.ExecuteReaderAsync())
-            {
-                while (await reader.ReadAsync())
-                {
-                    if (int.TryParse(reader[0].ToString(), out int idEstudio) &&
-                        decimal.TryParse(reader[1].ToString(), out decimal precio))
-                    {
-                        precios.Add(idEstudio, precio);
-                    }
-                }
-            }
-            return precios;
-        }
-
-        private async Task AgregarCompraAsync(SqlConnection connection, SqlTransaction transaction, int idEstudio, int cantidad)
-        {
-            string query = "INSERT INTO COMPRA (id_Estudio, cantidad) VALUES (@idEstudio, @cantidad)";
-
-            using (var command = new SqlCommand(query, connection, transaction))
-            {
-                command.Parameters.AddWithValue("@idEstudio", idEstudio);
-                command.Parameters.AddWithValue("@cantidad", cantidad);
-                await command.ExecuteNonQueryAsync();
-            }
-        }
-
+        }      
         private void LimpiarControles()
         {
             onlyPreventivo.Value = 0;
             prevPlusMRI.Value = 0;
             prevPlusRad.Value = 0;
         }
+
         private async void btnAgregar_Click(object sender, EventArgs e)
         {
             int cantidadPreventivo = (int)onlyPreventivo.Value;
             int cantidadPreventivoMRI = (int)prevPlusMRI.Value;
             int cantidadPreventivoRadiografia = (int)prevPlusRad.Value;
 
-            if (cantidadPreventivo == 0 && cantidadPreventivoMRI == 0 && cantidadPreventivoRadiografia == 0)
+            if (cantidadPreventivo + cantidadPreventivoMRI + cantidadPreventivoRadiografia == 0)
             {
-                MessageBox.Show("Por favor seleccione al menos un servicio para agregar.");
+                MessageBox.Show("Por favor seleccione al menos un servicio.", "Advertencia", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
+
+            // TODO: Obtain id_cliente from user input (e.g., a ComboBox or login session)
+            int idCliente = 1; // Placeholder; replace with actual client selection logic
+            string metodoPago = "TARJETA"; // Placeholder; replace with actual payment method selection
 
             using (var connection = new SqlConnection(connectionString))
             {
                 try
                 {
                     await connection.OpenAsync();
+                    var estudios = await ObtenerEstudiosAsync(connection);
 
-                    // Obtener precios desde la base de datos
-                    var precios = await ObtenerPreciosAsync(connection);
-                    decimal total = 0;
+                    // Map study names to IDs (case-insensitive)
+                    int? idPreventivo = estudios.FirstOrDefault(x => x.Value.Nombre.ToLower().Contains("check up preventivo") && !x.Value.Nombre.ToLower().Contains("mri") && !x.Value.Nombre.ToLower().Contains("radiografia")).Key;
+                    int? idPreventivoMRI = estudios.FirstOrDefault(x => x.Value.Nombre.ToLower().Contains("check up preventivo") && x.Value.Nombre.ToLower().Contains("mri")).Key;
+                    int? idPreventivoRad = estudios.FirstOrDefault(x => x.Value.Nombre.ToLower().Contains("check up preventivo") && x.Value.Nombre.ToLower().Contains("radiografia")).Key;
 
-                    // Validar que existan los estudios necesarios
-                    if (!precios.ContainsKey(1) || !precios.ContainsKey(2) || !precios.ContainsKey(3))
+                    if ((cantidadPreventivo > 0 && idPreventivo == null) ||
+                        (cantidadPreventivoMRI > 0 && idPreventivoMRI == null) ||
+                        (cantidadPreventivoRadiografia > 0 && idPreventivoRad == null))
                     {
-                        MessageBox.Show("Error: Configuración de estudios incompleta en la base de datos");
+                        MessageBox.Show("Uno o más estudios no están disponibles en la base de datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
+
+                    decimal total = 0;
+                    var resultados = new List<(string Status, int? IdFactura, decimal? Total, string ErrorMessage)>();
 
                     using (var transaction = connection.BeginTransaction())
                     {
@@ -103,39 +83,53 @@ namespace LaboratoriosChoppo
                         {
                             if (cantidadPreventivo > 0)
                             {
-                                total += cantidadPreventivo * precios[1];
-                                await AgregarCompraAsync(connection, transaction, 1, cantidadPreventivo);
+                                var resultado = await EjecutarCompraAsync(connection, idCliente, idPreventivo.Value, cantidadPreventivo, metodoPago);
+                                resultados.Add(resultado);
+                                if (resultado.Status == "SUCCESS") total += resultado.Total.Value;
                             }
 
                             if (cantidadPreventivoMRI > 0)
                             {
-                                total += cantidadPreventivoMRI * precios[2];
-                                await AgregarCompraAsync(connection, transaction, 2, cantidadPreventivoMRI);
+                                var resultado = await EjecutarCompraAsync(connection, idCliente, idPreventivoMRI.Value, cantidadPreventivoMRI, metodoPago);
+                                resultados.Add(resultado);
+                                if (resultado.Status == "SUCCESS") total += resultado.Total.Value;
                             }
 
                             if (cantidadPreventivoRadiografia > 0)
                             {
-                                total += cantidadPreventivoRadiografia * precios[3];
-                                await AgregarCompraAsync(connection, transaction, 3, cantidadPreventivoRadiografia);
+                                var resultado = await EjecutarCompraAsync(connection, idCliente, idPreventivoRad.Value, cantidadPreventivoRadiografia, metodoPago);
+                                resultados.Add(resultado);
+                                if (resultado.Status == "SUCCESS") total += resultado.Total.Value;
+                            }
+
+                            if (resultados.Any(r => r.Status != "SUCCESS"))
+                            {
+                                throw new Exception(string.Join("\n", resultados.Where(r => r.Status != "SUCCESS").Select(r => r.ErrorMessage)));
                             }
 
                             transaction.Commit();
-                            MessageBox.Show($"Se agregaron los estudios. Total: ${total:N2}");
+                            MessageBox.Show($"Compra registrada exitosamente\nTotal: ${total:N2}", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                             LimpiarControles();
                         }
                         catch (Exception ex)
                         {
-                            transaction.Rollback();
-                            MessageBox.Show($"Error al guardar los datos: {ex.Message}");
+                            try { transaction.Rollback(); }
+                            catch (Exception rollbackEx)
+                            {
+                                // Log rollback error (e.g., to a file or monitoring system)
+                                Console.WriteLine($"Error during rollback: {rollbackEx.Message}");
+                            }
+                            MessageBox.Show($"Error al guardar: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
-                catch (SqlException ex)
+                catch (Exception ex)
                 {
-                    MessageBox.Show($"Error de base de datos: {ex.Message}");
+                    MessageBox.Show($"Error al conectar con la base de datos: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-            }        
+            }
         }
+
 
         private void btnRegresar_Click(object sender, EventArgs e)
         {
@@ -143,5 +137,53 @@ namespace LaboratoriosChoppo
             Form1 form1 = new Form1();
             form1.Show();
         }
+        private async Task<Dictionary<int, (string Nombre, decimal Precio)>> ObtenerEstudiosAsync(SqlConnection connection)
+        {
+            var estudios = new Dictionary<int, (string Nombre, decimal Precio)>();
+            string query = "SELECT id_estudio, nombre, precio FROM ESTUDIOS WHERE activo = 1";
+
+            using (var command = new SqlCommand(query, connection))
+            using (var reader = await command.ExecuteReaderAsync())
+            {
+                while (await reader.ReadAsync())
+                {
+                    estudios.Add(reader.GetInt32(0), (reader.GetString(1), reader.GetDecimal(2)));
+                }
+            }
+            return estudios;
+        }
+        private async Task<(string Status, int? IdFactura, decimal? Total, string ErrorMessage)> EjecutarCompraAsync(
+            SqlConnection connection, int idCliente, int idEstudio, int cantidad, string metodoPago)
+        {
+            using (var command = new SqlCommand("sp_AgregarCompraYFactura", connection))
+            {
+                command.CommandType = CommandType.StoredProcedure;
+                command.Parameters.AddWithValue("@id_cliente", idCliente);
+                command.Parameters.AddWithValue("@id_estudio", idEstudio);
+                command.Parameters.AddWithValue("@cantidad", cantidad);
+                command.Parameters.AddWithValue("@metodo_pago", (object)metodoPago ?? DBNull.Value);
+                command.Parameters.AddWithValue("@descuento", 0);
+                command.Parameters.AddWithValue("@notas", DBNull.Value);
+                command.Parameters.AddWithValue("@id_factura_existente", DBNull.Value);
+
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    if (await reader.ReadAsync())
+                    {
+                        string status = reader.GetString(0);
+                        if (status == "SUCCESS")
+                        {
+                            return (status, reader.GetInt32(1), reader.GetDecimal(2), null);
+                        }
+                        else
+                        {
+                            return (status, null, null, reader.GetString(2));
+                        }
+                    }
+                }
+            }
+            return ("ERROR", null, null, "No se recibió respuesta del procedimiento almacenado");
+        }
     }
 }
+

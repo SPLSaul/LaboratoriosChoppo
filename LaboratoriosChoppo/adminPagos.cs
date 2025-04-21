@@ -19,13 +19,6 @@ namespace LaboratoriosChoppo
 
         private void adminPagos_Load(object sender, EventArgs e)
         {
-            // TODO: esta línea de código carga datos en la tabla 'choppoDataSet2.VistaAdministradorPagos' Puede moverla o quitarla según sea necesario.
-            this.vistaAdministradorPagosTableAdapter2.Fill(this.choppoDataSet2.VistaAdministradorPagos);
-            // TODO: esta línea de código carga datos en la tabla 'choppoDataSet1.VistaAdministradorPagos' Puede moverla o quitarla según sea necesario.
-            this.vistaAdministradorPagosTableAdapter1.Fill(this.choppoDataSet1.VistaAdministradorPagos);
-            // TODO: esta línea de código carga datos en la tabla 'choppoDataSet.VistaAdministradorPagos' Puede moverla o quitarla según sea necesario.
-                this.vistaAdministradorPagosTableAdapter.Fill(this.choppoDataSet.VistaAdministradorPagos);
-
         }
 
         private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)

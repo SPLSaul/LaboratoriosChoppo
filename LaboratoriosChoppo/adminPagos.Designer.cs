@@ -36,21 +36,13 @@
             this.preciounitarioDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.importeparcialDataGridViewTextBoxColumn = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.vistaAdministradorPagosBindingSource2 = new System.Windows.Forms.BindingSource(this.components);
-            this.choppoDataSet2 = new LaboratoriosChoppo.ChoppoDataSet2();
             this.vistaAdministradorPagosBindingSource1 = new System.Windows.Forms.BindingSource(this.components);
-            this.choppoDataSet1 = new LaboratoriosChoppo.ChoppoDataSet1();
-            this.choppoDataSet = new LaboratoriosChoppo.ChoppoDataSet();
             this.vistaAdministradorPagosBindingSource = new System.Windows.Forms.BindingSource(this.components);
-            this.vistaAdministradorPagosTableAdapter = new LaboratoriosChoppo.ChoppoDataSetTableAdapters.VistaAdministradorPagosTableAdapter();
-            this.vistaAdministradorPagosTableAdapter1 = new LaboratoriosChoppo.ChoppoDataSet1TableAdapters.VistaAdministradorPagosTableAdapter();
-            this.vistaAdministradorPagosTableAdapter2 = new LaboratoriosChoppo.ChoppoDataSet2TableAdapters.VistaAdministradorPagosTableAdapter();
+
             this.btnGenerarFactura = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vistaAdministradorPagosBindingSource2)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.choppoDataSet2)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vistaAdministradorPagosBindingSource1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.choppoDataSet1)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.choppoDataSet)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.vistaAdministradorPagosBindingSource)).BeginInit();
             this.SuspendLayout();
             // 
@@ -116,44 +108,21 @@
             // vistaAdministradorPagosBindingSource2
             // 
             this.vistaAdministradorPagosBindingSource2.DataMember = "VistaAdministradorPagos";
-            this.vistaAdministradorPagosBindingSource2.DataSource = this.choppoDataSet2;
             // 
             // choppoDataSet2
             // 
-            this.choppoDataSet2.DataSetName = "ChoppoDataSet2";
-            this.choppoDataSet2.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+
             // 
             // vistaAdministradorPagosBindingSource1
             // 
             this.vistaAdministradorPagosBindingSource1.DataMember = "VistaAdministradorPagos";
-            this.vistaAdministradorPagosBindingSource1.DataSource = this.choppoDataSet1;
             // 
-            // choppoDataSet1
-            // 
-            this.choppoDataSet1.DataSetName = "ChoppoDataSet1";
-            this.choppoDataSet1.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
-            // 
-            // choppoDataSet
-            // 
-            this.choppoDataSet.DataSetName = "ChoppoDataSet";
-            this.choppoDataSet.SchemaSerializationMode = System.Data.SchemaSerializationMode.IncludeSchema;
+ 
             // 
             // vistaAdministradorPagosBindingSource
             // 
             this.vistaAdministradorPagosBindingSource.DataMember = "VistaAdministradorPagos";
-            this.vistaAdministradorPagosBindingSource.DataSource = this.choppoDataSet;
-            // 
-            // vistaAdministradorPagosTableAdapter
-            // 
-            this.vistaAdministradorPagosTableAdapter.ClearBeforeFill = true;
-            // 
-            // vistaAdministradorPagosTableAdapter1
-            // 
-            this.vistaAdministradorPagosTableAdapter1.ClearBeforeFill = true;
-            // 
-            // vistaAdministradorPagosTableAdapter2
-            // 
-            this.vistaAdministradorPagosTableAdapter2.ClearBeforeFill = true;
+     
             // 
             // btnGenerarFactura
             // 
@@ -179,10 +148,7 @@
             this.Load += new System.EventHandler(this.adminPagos_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.vistaAdministradorPagosBindingSource2)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.choppoDataSet2)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.vistaAdministradorPagosBindingSource1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.choppoDataSet1)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.choppoDataSet)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.vistaAdministradorPagosBindingSource)).EndInit();
             this.ResumeLayout(false);
 
@@ -192,15 +158,9 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.DataGridView dataGridView1;
-        private ChoppoDataSet choppoDataSet;
         private System.Windows.Forms.BindingSource vistaAdministradorPagosBindingSource;
-        private ChoppoDataSetTableAdapters.VistaAdministradorPagosTableAdapter vistaAdministradorPagosTableAdapter;
-        private ChoppoDataSet1 choppoDataSet1;
         private System.Windows.Forms.BindingSource vistaAdministradorPagosBindingSource1;
-        private ChoppoDataSet1TableAdapters.VistaAdministradorPagosTableAdapter vistaAdministradorPagosTableAdapter1;
-        private ChoppoDataSet2 choppoDataSet2;
         private System.Windows.Forms.BindingSource vistaAdministradorPagosBindingSource2;
-        private ChoppoDataSet2TableAdapters.VistaAdministradorPagosTableAdapter vistaAdministradorPagosTableAdapter2;
         private System.Windows.Forms.DataGridViewTextBoxColumn estudionombreDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn cantidadestudiosDataGridViewTextBoxColumn;
         private System.Windows.Forms.DataGridViewTextBoxColumn preciounitarioDataGridViewTextBoxColumn;

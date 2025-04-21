@@ -13,14 +13,11 @@ namespace LaboratoriosChoppo
 {
     public partial class Form1 : Form
     {
+        private string connectionString = "Server=tcp:design-patterns.database.windows.net,1433;Initial Catalog=ChopoLabsDB;Authentication=Active Directory Default;Encrypt=True;"; 
         public Form1()
         {
             InitializeComponent();
-            var dbCon = DBConexion.Instance();
-            dbCon.Server = "localhost";
-            dbCon.DatabaseName = "CHOPO";
-            dbCon.User = "root";
-            dbCon.Password = "Arr!ba3lCruzAzul";
+            
         }
 
         private void btnRevGeneral_Click(object sender, EventArgs e)
@@ -36,5 +33,14 @@ namespace LaboratoriosChoppo
             adminPagos adminPagos = new adminPagos();
             adminPagos.Show();
         }
+
+        private void btnEstudHombe_Click(object sender, EventArgs e)
+        {        
+            vistaEstudiosHombre estudiosHombre = new vistaEstudiosHombre();
+            estudiosHombre.Show();
+            this.Hide();
+        }
+
+
     }
 }
