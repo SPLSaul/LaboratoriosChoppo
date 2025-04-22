@@ -33,6 +33,9 @@
             this.btnEstudHombe = new System.Windows.Forms.Button();
             this.button2 = new System.Windows.Forms.Button();
             this.btnPagos = new System.Windows.Forms.Button();
+            this.entryUser = new System.Windows.Forms.TextBox();
+            this.btnSeleccionUsuario = new System.Windows.Forms.Button();
+            this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // label1
@@ -53,7 +56,7 @@
             this.btnRevGeneral.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnRevGeneral.ForeColor = System.Drawing.Color.Black;
             this.btnRevGeneral.Location = new System.Drawing.Point(30, 115);
-            this.btnRevGeneral.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnRevGeneral.Margin = new System.Windows.Forms.Padding(2);
             this.btnRevGeneral.Name = "btnRevGeneral";
             this.btnRevGeneral.Size = new System.Drawing.Size(175, 277);
             this.btnRevGeneral.TabIndex = 1;
@@ -67,7 +70,7 @@
             this.btnEstudHombe.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnEstudHombe.ForeColor = System.Drawing.Color.Black;
             this.btnEstudHombe.Location = new System.Drawing.Point(253, 115);
-            this.btnEstudHombe.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnEstudHombe.Margin = new System.Windows.Forms.Padding(2);
             this.btnEstudHombe.Name = "btnEstudHombe";
             this.btnEstudHombe.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
             this.btnEstudHombe.Size = new System.Drawing.Size(184, 277);
@@ -82,7 +85,7 @@
             this.button2.Font = new System.Drawing.Font("Microsoft Sans Serif", 15F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.button2.ForeColor = System.Drawing.Color.Black;
             this.button2.Location = new System.Drawing.Point(491, 115);
-            this.button2.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.button2.Margin = new System.Windows.Forms.Padding(2);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(183, 277);
             this.button2.TabIndex = 3;
@@ -92,7 +95,7 @@
             // btnPagos
             // 
             this.btnPagos.Location = new System.Drawing.Point(233, 402);
-            this.btnPagos.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnPagos.Margin = new System.Windows.Forms.Padding(2);
             this.btnPagos.Name = "btnPagos";
             this.btnPagos.Size = new System.Drawing.Size(219, 40);
             this.btnPagos.TabIndex = 4;
@@ -100,20 +103,52 @@
             this.btnPagos.UseVisualStyleBackColor = true;
             this.btnPagos.Click += new System.EventHandler(this.btnPagos_Click);
             // 
+            // entryUser
+            // 
+            this.entryUser.Location = new System.Drawing.Point(253, 80);
+            this.entryUser.Name = "entryUser";
+            this.entryUser.Size = new System.Drawing.Size(121, 20);
+            this.entryUser.TabIndex = 5;
+            // 
+            // btnSeleccionUsuario
+            // 
+            this.btnSeleccionUsuario.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.btnSeleccionUsuario.Location = new System.Drawing.Point(380, 74);
+            this.btnSeleccionUsuario.Name = "btnSeleccionUsuario";
+            this.btnSeleccionUsuario.Size = new System.Drawing.Size(85, 30);
+            this.btnSeleccionUsuario.TabIndex = 6;
+            this.btnSeleccionUsuario.Text = "Ingresar";
+            this.btnSeleccionUsuario.UseVisualStyleBackColor = true;
+            this.btnSeleccionUsuario.Click += new System.EventHandler(this.btnSeleccionUsuario_Click);
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.label2.Location = new System.Drawing.Point(180, 81);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(67, 18);
+            this.label2.TabIndex = 7;
+            this.label2.Text = "Usuario";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(735, 450);
+            this.Controls.Add(this.label2);
+            this.Controls.Add(this.btnSeleccionUsuario);
+            this.Controls.Add(this.entryUser);
             this.Controls.Add(this.btnPagos);
             this.Controls.Add(this.button2);
             this.Controls.Add(this.btnEstudHombe);
             this.Controls.Add(this.btnRevGeneral);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Form1";
             this.Text = "Form1";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -124,6 +159,9 @@
         private System.Windows.Forms.Button btnEstudHombe;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button btnPagos;
+        private System.Windows.Forms.TextBox entryUser;
+        private System.Windows.Forms.Button btnSeleccionUsuario;
+        private System.Windows.Forms.Label label2;
     }
 }
 

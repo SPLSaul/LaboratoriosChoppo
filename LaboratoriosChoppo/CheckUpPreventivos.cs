@@ -22,6 +22,8 @@ namespace LaboratoriosChoppo
             InitializeComponent();
 
         }
+        public Cliente ClienteActual { get; set; }
+
         private void label3_Click(object sender, EventArgs e)
         {
 
@@ -51,8 +53,15 @@ namespace LaboratoriosChoppo
             }
 
             // TODO: Obtain id_cliente from user input (e.g., a ComboBox or login session)
-            int idCliente = 1; // Placeholder; replace with actual client selection logic
-            string metodoPago = "TARJETA"; // Placeholder; replace with actual payment method selection
+            if (this.ClienteActual == null)
+            {
+                MessageBox.Show("Por favor seleccione un cliente primero", "Advertencia",
+                              MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Use the selected client ID
+            int idCliente = this.ClienteActual.Id; string metodoPago = "TARJETA"; // Placeholder; replace with actual payment method selection
 
             using (var connection = new SqlConnection(connectionString))
             {
@@ -67,7 +76,7 @@ namespace LaboratoriosChoppo
                     int? idPreventivoRad = estudios.FirstOrDefault(x => x.Value.Nombre.ToLower().Contains("check up preventivo") && x.Value.Nombre.ToLower().Contains("radiografia")).Key;
 
                     if ((cantidadPreventivo > 0 && idPreventivo == null) ||
-                        (cantidadPreventivoMRI > 0 && idPreventivoMRI == null) ||
+                           (cantidadPreventivoMRI > 0 && idPreventivoMRI == null) ||
                         (cantidadPreventivoRadiografia > 0 && idPreventivoRad == null))
                     {
                         MessageBox.Show("Uno o más estudios no están disponibles en la base de datos.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -83,28 +92,23 @@ namespace LaboratoriosChoppo
                         {
                             if (cantidadPreventivo > 0)
                             {
-                                var resultado = await EjecutarCompraAsync(connection, idCliente, idPreventivo.Value, cantidadPreventivo, metodoPago);
+                                var resultado = await EjecutarCompraAsync(connection, transaction, idCliente, idPreventivo.Value, cantidadPreventivo, metodoPago);
                                 resultados.Add(resultado);
                                 if (resultado.Status == "SUCCESS") total += resultado.Total.Value;
                             }
 
                             if (cantidadPreventivoMRI > 0)
                             {
-                                var resultado = await EjecutarCompraAsync(connection, idCliente, idPreventivoMRI.Value, cantidadPreventivoMRI, metodoPago);
+                                var resultado = await EjecutarCompraAsync(connection, transaction, idCliente, idPreventivoMRI.Value, cantidadPreventivoMRI, metodoPago);
                                 resultados.Add(resultado);
                                 if (resultado.Status == "SUCCESS") total += resultado.Total.Value;
                             }
 
                             if (cantidadPreventivoRadiografia > 0)
                             {
-                                var resultado = await EjecutarCompraAsync(connection, idCliente, idPreventivoRad.Value, cantidadPreventivoRadiografia, metodoPago);
+                                var resultado = await EjecutarCompraAsync(connection, transaction, idCliente, idPreventivoRad.Value, cantidadPreventivoRadiografia, metodoPago);
                                 resultados.Add(resultado);
                                 if (resultado.Status == "SUCCESS") total += resultado.Total.Value;
-                            }
-
-                            if (resultados.Any(r => r.Status != "SUCCESS"))
-                            {
-                                throw new Exception(string.Join("\n", resultados.Where(r => r.Status != "SUCCESS").Select(r => r.ErrorMessage)));
                             }
 
                             transaction.Commit();
@@ -153,9 +157,9 @@ namespace LaboratoriosChoppo
             return estudios;
         }
         private async Task<(string Status, int? IdFactura, decimal? Total, string ErrorMessage)> EjecutarCompraAsync(
-            SqlConnection connection, int idCliente, int idEstudio, int cantidad, string metodoPago)
+     SqlConnection connection, SqlTransaction transaction, int idCliente, int idEstudio, int cantidad, string metodoPago)
         {
-            using (var command = new SqlCommand("sp_AgregarCompraYFactura", connection))
+            using (var command = new SqlCommand("sp_AgregarCompraYFactura", connection, transaction)) // Added transaction here
             {
                 command.CommandType = CommandType.StoredProcedure;
                 command.Parameters.AddWithValue("@id_cliente", idCliente);
